@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Emails</title>
+    <style>
+        .email-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .email-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #ccc;
+        }
+        .badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #fff;
+        }
+        .public { background-color: #007bff; }
+        .private { background-color: #28a745; }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .empty-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciador de Emails</h1>
+
+    <div>
+        <label for="public-email">Email Público:</label>
+        <input type="email" id="public-email">
+        <button onclick="addEmail('public')">Adicionar Público</button>
+    </div>
+
+    <div>
+        <label for="private-email">Email Privado:</label>
+        <input type="email" id="private-email">
+        <button onclick="addEmail('private')">Adicionar Privado</button>
+        <button id="remove-all-button" onclick="removeAllEmails()" disabled>Remover Todos</button>
+    </div>
+
+    <div>
+        <label for="sort-select">Ordenar por:</label>
+        <select id="sort-select" onchange="sortList()">
+            <option value="public">Públicos</option>
+            <option value="private">Privados</option>
+        </select>
+    </div>
+
+    <ul id="email-list" class="email-list"></ul>
+
+    
+    <p id="empty-message" class="empty-message" style="display:none;">A lista está vazia</p>
+
+    <!-- <form id="email-form" action="/submit-emails" method="post"> -->
+        <!-- <form id="email-form" method="post"> -->
+        
+        <input type="hidden" id="email-list-data" name="emails">
+        <button type="text" onclick="prepareEmailData()">Enviar Lista</button>
+    <!-- </form> -->
+
+    <script>
+        let emailId = 1;
+
+        function addEmail(type) {
+            const emailInput = document.getElementById(`${type}-email`);
+            const email = emailInput.value.trim();
+
+            if (email) {
+                const emailList = document.getElementById('email-list');
+                const li = document.createElement('li');
+                li.className = 'email-list-item';
+                li.dataset.id = emailId++;
+                li.id = emailId++;
+                li.dataset.type = type;
+
+                const badge = document.createElement('span');
+                badge.className = `badge ${type}`;
+                badge.innerText = type.charAt(0).toUpperCase() + type.slice(1);
+
+                const text = document.createElement('span');
+                text.innerText = email;
+
+                const removeButton = document.createElement('button');
+                removeButton.innerText = 'Remover';
+                removeButton.onclick = () => removeEmail(li.dataset.id);
+
+                li.appendChild(badge);
+                li.appendChild(text);
+                li.appendChild(removeButton);
+
+                emailList.appendChild(li);
+                emailInput.value = '';
+
+                sortList(); // Reorder the list based on the selected sorting criteria
+                updateRemoveAllButton();
+                updateEmptyMessage();
+            }
+        }
+
+        function removeEmail(id) {
+            const emailList = document.getElementById('email-list');
+            const item = emailList.querySelector(`li[data-id='${id}']`);
+            if (item) {
+                emailList.removeChild(item);
+                updateRemoveAllButton();
+                updateEmptyMessage();
+            }
+        }
+
+        function removeAllEmails() {
+            const emailList = document.getElementById('email-list');
+            emailList.innerHTML = '';
+            updateRemoveAllButton();
+            updateEmptyMessage();
+        }
+
+        function updateRemoveAllButton() {
+            const emailList = document.getElementById('email-list');
+            const removeAllButton = document.getElementById('remove-all-button');
+            removeAllButton.disabled = emailList.children.length === 0;
+        }
+
+        function updateEmptyMessage() {
+            const emailList = document.getElementById('email-list');
+            const emptyMessage = document.getElementById('empty-message');
+            if (emailList.children.length === 0) {
+                emptyMessage.style.display = 'block';
+            } else {
+                emptyMessage.style.display = 'none';
+            }
+        }
+
+        function sortList() {
+            const sortSelect = document.getElementById('sort-select');
+            const sortType = sortSelect.value;
+            const emailList = document.getElementById('email-list');
+            const items = Array.from(emailList.children);
+
+            // Sort items based on the selected type
+            items.sort((a, b) => {
+                if (sortType === 'private') {
+                    return a.dataset.type.localeCompare(b.dataset.type);
+                } else {
+                    return b.dataset.type.localeCompare(a.dataset.type);
+                }
+            });
+
+            emailList.innerHTML = '';
+            items.forEach(item => emailList.appendChild(item));
+        }
+
+        function prepareEmailData() {
+            const emailList = document.getElementById('email-list');
+            const emails = Array.from(emailList.children).map(item => ({
+                email: item.querySelector('span:nth-child(2)').innerText,
+                id: item.dataset.id,
+                type: item.dataset.type
+            }));
+            
+            document.getElementById('email-list-data').value = JSON.stringify(emails);
+            console.log(emails, 'aqui');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateRemoveAllButton();
+            updateEmptyMessage();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de E-mails</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .email-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .email-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            color: white;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        .badge.public {
+            background-color: #4CAF50; /* Green for public */
+        }
+        .badge.private {
+            background-color: #2196F3; /* Blue for private */
+        }
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        .filter-group label {
+            margin-right: 10px;
+        }
+        .empty-message {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+            display: block; /* Shown by default */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerenciador de E-mails</h1>
+        
+        <div class="input-group">
+            <input type="text" id="publicEmail" placeholder="Digite um e-mail público">
+            <button onclick="addEmail('public')">Adicionar E-mail Público</button>
+        </div>
+        <div class="input-group">
+            <input type="text" id="privateEmail" placeholder="Digite um e-mail privado">
+            <button onclick="addEmail('private')">Adicionar E-mail Privado</button>
+        </div>
+        
+        <div class="filter-group">
+            <label>Ordenar por:</label>
+            <select id="sortSelect" onchange="sortEmailList()">
+                <option value="publicFirst">Públicos Primeiro</option>
+                <option value="privateFirst">Privados Primeiro</option>
+            </select>
+        </div>
+        
+        <button onclick="removeAllEmails()">Remover Todos</button>
+        
+        <ul id="emailList" class="email-list"></ul>
+        <p id="emptyMessage" class="empty-message">Não contém e-mails.</p>
+    </div>
+
+    <script>
+        let emailCounter = 0;
+
+        function addEmail(type) {
+            const emailInput = type === 'public' ? document.getElementById('publicEmail') : document.getElementById('privateEmail');
+            const emailList = document.getElementById('emailList');
+            const email = emailInput.value.trim();
+
+            if (email) {
+                emailCounter++;
+                const listItem = document.createElement('li');
+                listItem.className = 'email-item';
+                listItem.dataset.id = emailCounter;
+                listItem.innerHTML = `
+                    <span>${email}</span>
+                    <span class="badge ${type}">${type === 'public' ? 'Público' : 'Privado'}</span>
+                    <button class="remove-button" onclick="removeEmail(${emailCounter})">Remover</button>
+                `;
+                emailList.innerHTML += listItem.outerHTML; // Use innerHTML to append
+                emailInput.value = ''; // Clear input
+                sortEmailList(); // Sort list after adding
+                updateEmptyMessage(); // Update empty message visibility
+            }
+        }
+
+        function removeEmail(id) {
+            const emailList = document.getElementById('emailList');
+            emailList.innerHTML = Array.from(emailList.children)
+                .filter(item => item.dataset.id != id) // Filter out the item to remove
+                .map(item => item.outerHTML)
+                .join('');
+            updateEmptyMessage(); // Update empty message visibility
+        }
+
+        function removeAllEmails() {
+            const emailList = document.getElementById('emailList');
+            emailList.innerHTML = '';
+            updateEmptyMessage(); // Update empty message visibility
+        }
+
+        function sortEmailList() {
+            const emailList = document.getElementById('emailList');
+            const items = Array.from(emailList.children);
+            const sortOrder = document.getElementById('sortSelect').value;
+
+            items.sort((a, b) => {
+                const isPublicA = a.querySelector('.badge').classList.contains('public');
+                const isPublicB = b.querySelector('.badge').classList.contains('public');
+
+                if (sortOrder === 'publicFirst') {
+                    return isPublicA && !isPublicB ? -1 : !isPublicA && isPublicB ? 1 : 0;
+                } else {
+                    return !isPublicA && isPublicB ? -1 : isPublicA && !isPublicB ? 1 : 0;
+                }
+            });
+
+            emailList.innerHTML = items.map(item => item.outerHTML).join('');
+
+            updateEmptyMessage(); // Update empty message visibility
+        }
+
+        function updateEmptyMessage() {
+            const emailList = document.getElementById('emailList');
+            const emptyMessage = document.getElementById('emptyMessage');
+
+            if (emailList.children.length === 0) {
+                emptyMessage.style.display = 'block';
+            } else {
+                emptyMessage.style.display = 'none';
+            }
+        }
+
+        // Initial check to show or hide empty message on page load
+        document.addEventListener('DOMContentLoaded', updateEmptyMessage);
+    </script>
+</body>
+</html>
