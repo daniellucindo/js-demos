@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Emails</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+        .badge {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            color: #fff;
+        }
+        .public { background-color: #007bff; }
+        .private { background-color: #28a745; }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .empty-message {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gerenciador de Emails</h1>
+
+    <div>
+        <label for="public-email">Email Público:</label>
+        <input type="email" id="public-email">
+        <button onclick="addEmail('public')">Adicionar Público</button>
+    </div>
+
+    <div>
+        <label for="private-email">Email Privado:</label>
+        <input type="email" id="private-email">
+        <button onclick="addEmail('private')">Adicionar Privado</button>
+        <button id="remove-all-button" onclick="removeAllEmails()" disabled>Remover Todos</button>
+    </div>
+
+    <div>
+        <label for="sort-select">Ordenar por:</label>
+        <select id="sort-select" onchange="sortTable()">
+            <option value="public">Públicos</option>
+            <option value="private">Privados</option>
+        </select>
+    </div>
+
+    <table id="email-table">
+        <thead>
+            <tr>
+                <th>Tipo</th>
+                <th>Email</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="email-list">
+            <!-- Emails serão adicionados aqui -->
+        </tbody>
+    </table>
+
+    <p id="empty-message" class="empty-message" style="display:none;">A lista está vazia</p>
+
+    <input type="hidden" id="email-list-data" name="emails">
+    <button type="button" onclick="prepareEmailData()">Enviar Lista</button>
+
+    <script>
+        let emailId = 1;
+
+        function addEmail(type) {
+            const emailInput = document.getElementById(`${type}-email`);
+            const email = emailInput.value.trim();
+
+            if (email) {
+                const emailList = document.getElementById('email-list');
+                const rowId = emailId++;
+                const badgeClass = type === 'public' ? 'public' : 'private';
+                const badgeText = type.charAt(0).toUpperCase() + type.slice(1);
+                
+                emailList.innerHTML += `
+                    <tr data-id="${rowId}" data-type="${type}">
+                        <td><span class="badge ${badgeClass}">${badgeText}</span></td>
+                        <td>${email}</td>
+                        <td><button onclick="removeEmail(${rowId})">Remover</button></td>
+                    </tr>
+                `;
+
+                emailInput.value = '';
+                sortTable(); // Reordenar a tabela com base na opção de ordenação selecionada
+                updateRemoveAllButton();
+                updateEmptyMessage();
+            }
+        }
+
+        function removeEmail(id) {
+            const emailList = document.getElementById('email-list');
+            const row = emailList.querySelector(`tr[data-id='${id}']`);
+            if (row) {
+                row.remove();
+                updateRemoveAllButton();
+                updateEmptyMessage();
+            }
+        }
+
+        function removeAllEmails() {
+            const emailList = document.getElementById('email-list');
+            emailList.innerHTML = '';
+            updateRemoveAllButton();
+            updateEmptyMessage();
+        }
+
+        function updateRemoveAllButton() {
+            const emailList = document.getElementById('email-list');
+            const removeAllButton = document.getElementById('remove-all-button');
+            removeAllButton.disabled = emailList.children.length === 0;
+        }
+
+        function updateEmptyMessage() {
+            const emailList = document.getElementById('email-list');
+            const emptyMessage = document.getElementById('empty-message');
+            emptyMessage.style.display = emailList.children.length === 0 ? 'block' : 'none';
+        }
+
+        function sortTable() {
+            const sortSelect = document.getElementById('sort-select');
+            const sortType = sortSelect.value;
+            const emailList = document.getElementById('email-list');
+            const rows = Array.from(emailList.querySelectorAll('tr'));
+
+            // Sort rows based on the selected type
+            rows.sort((a, b) => {
+                if (sortType === 'private') {
+                    return a.dataset.type.localeCompare(b.dataset.type);
+                } else {
+                    return b.dataset.type.localeCompare(a.dataset.type);
+                }
+            });
+
+            emailList.innerHTML = '';
+            rows.forEach(row => emailList.appendChild(row));
+        }
+
+        function prepareEmailData() {
+            const emailList = document.getElementById('email-list');
+            const emails = Array.from(emailList.children).map(row => ({
+                email: row.querySelector('td:nth-child(2)').innerText,
+                id: row.dataset.id,
+                type: row.dataset.type
+            }));
+            
+            document.getElementById('email-list-data').value = JSON.stringify(emails);
+            console.log(emails, 'aqui');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateRemoveAllButton();
+            updateEmptyMessage();
+        });
+    </script>
+</body>
+</html>
