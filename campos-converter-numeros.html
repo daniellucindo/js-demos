@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de input</title>
+</head>
+<body>
+    <form id="myForm" method="POST">
+        <input type="text" id="text" name="id_conv" data-input>
+        <input type="text" id="text_value" name="id_value" data-input>
+        <button type="submit">Enviar</button>
+      </form>
+      
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+      <script defer>
+        $(document).ready(function() {
+          $('[data-input]').each(function(_, input) {
+            const name = $(input).attr('name');
+            const inputHiddenName = `${name}-convert`;
+      
+            // Verifica se o input hidden já existe
+            if (!$(`input[name="${inputHiddenName}"]`).length) {
+              $(input).before(`<input type="hidden" name="${inputHiddenName}" />`);
+            }
+
+            const inputHidden = $(`input[name="${inputHiddenName}"]`);
+      
+            // Atualiza o valor do input hidden conforme o input é preenchido
+            $(input).on('input', function() {
+              const value = $(this).val().replace(/\./g, '').replace(',', '.');
+              inputHidden.val(value);
+            });
+          });
+      
+          // Manipulação do evento submit
+          $('#myForm').on('submit', function(e) {
+            e.preventDefault(); // impedido o envio do form
+      
+            // Console
+            $('[data-input]').each(function(_, input) {
+              const name = $(input).attr('name');
+              const value = $(input).val();
+              console.log(`${name}: ${value}`);
+            });
+      
+          });
+        });
+      </script>
+      
+      
+      
+      
+</body>
+</html>
