@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de E-mails</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        .email-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .email-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        .remove-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        [readonly]{
+          background: #f44336;
+        }
+    </style>
+</head>
+<body>
+    
+  <h2> table 1</h2>
+  <table>
+    <tbody data-table-price>
+      <tr>
+        <td>
+          0 a 100
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input>
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input>
+        </td>
+        <td data-total>
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          101 a 200
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input>
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input>
+        </td>
+        <td data-total>
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Valor
+        </td>
+        <td>
+           0
+        </td>
+        <td>
+          0
+        </td>
+        <td>
+          0
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Valor folha</td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+      </tr>
+    </tfoot>    
+  </table>
+
+  <h2> table 2 value</h2>
+  <table>
+    <tbody data-table-price>
+      <tr>
+        <td>
+          0 a 100
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input value="1000">
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input value="1000">
+        </td>
+        <td data-total>
+          2000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          101 a 200
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input value="1000">
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input value="1000">
+        </td>
+        <td data-total>
+          2000
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Valor
+        </td>
+        <td data-total>
+           2000
+        </td>
+        <td data-total>
+          2000
+        </td>
+        <td data-total>
+         4000
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td>Valor folha</td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+        <td><input type="text" id="text" name="id_conv_total_1"></td>
+      </tr>
+    </tfoot>  
+  </table>
+  
+  <h2> table 3</h2>
+  <table>
+    <tbody data-table-price>
+      <tr>
+        <td>
+          0 a 100
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input>
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input>
+        </td>
+        <td data-total>
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          101 a 200
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_1" data-input>
+        </td>
+        <td>
+          <input type="text" id="text" name="id_conv_2" data-input>
+        </td>
+        <td data-total>
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Valor
+        </td>
+        <td>
+           0
+        </td>
+        <td>
+          0
+        </td>
+        <td data-total>
+          0
+        </td>
+      </tr>
+    </tbody>  
+    <tfoot>
+      <tr>
+        <td>Valor folha</td>
+        <td><input type="text" id="text" name="id_conv_total 1"></td>
+        <td><input type="text" id="text" name="id_conv_total 1"></td>
+        <td><input type="text" id="text" name="id_conv_total 1"></td>
+      </tr>
+    </tfoot>    
+  </table>
+
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
+  
+<script defer>
+// $(document).ready(function(){
+//   $('[data-input]').mask('000.000.000.000', {reverse: true});
+//   $('[data-table-price]').each((_, table) => {
+//     $('input', table).on('input', (e) => {
+//       const target = e.target;
+//       const row = target.closest('tr');
+//       const column = target.closest('td');
+//       const rowIndex = row.rowIndex;
+//       const columnIndex = column.cellIndex;
+//       const inputsRow = $('input', row);
+//       // Line
+//       const totalRow = inputsRow.map((i, input) => 
+//         Number(input.value || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+//       row.lastElementChild.textContent = totalRow;
+
+//       // Column
+//       const inputsColumn = $(`td:nth-child(${columnIndex +1 }) input`, table);
+//       const totalColumn = inputsColumn.map((i, input) =>
+//         Number(input.value || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+      
+//       $(`tr:last-child td:nth-child(${columnIndex +1 })`, table).text(totalColumn);
+
+//       const inputsTotalValue = $(`tr:last-child td:not(:last-child, :first-child)`, table);
+//       const totalValue = inputsTotalValue.map((i, input) =>
+//         Number(input.textContent || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+//       $('tr:last-child td:last-child', table).text(totalValue);
+
+//       console.log(mask)
+
+//       // console.log({row, column, totalRow,  input:$('input', row)}) 
+//     })
+//   })
+// });
+
+
+
+// Funciou sem calcular o total
+// $(document).ready(function(){
+//   // Aplicar máscara nos campos de input
+//   $('[data-input]').mask('000.000.000.000', {reverse: true});
+
+//   $('[data-table-price]').each((_, table) => {
+//     $('input', table).on('input', (e) => {
+//       const target = e.target;
+//       const row = target.closest('tr');
+//       const column = target.closest('td');
+//       const rowIndex = row.rowIndex;
+//       const columnIndex = column.cellIndex;
+//       const inputsRow = $('input', row);
+      
+//       // Soma da linha
+//       const totalRow = inputsRow.map((i, input) => 
+//         Number(input.value.replace(/\D/g, '') || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+      
+//       $(row).find('td[data-total]').text(totalRow.toLocaleString('pt-BR'));
+
+//       // Soma da coluna
+//       const inputsColumn = $(`td:nth-child(${columnIndex + 1}) input`, table);
+//       const totalColumn = inputsColumn.map((i, input) =>
+//         Number(input.value.replace(/\D/g, '') || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+//       $(`tr:last-child td:nth-child(${columnIndex + 1})`, table).text(totalColumn.toLocaleString('pt-BR'));
+
+//       // Total do valor
+//       const inputsTotalValue = $(`tr:last-child td:not(:last-child, :first-child)`, table);
+//       const totalValue = inputsTotalValue.map((i, input) =>
+//         Number(input.textContent.replace(/\D/g, '') || 0)
+//       ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+//       $('tr:last-child td:last-child', table).text(totalValue.toLocaleString('pt-BR'));
+//     });
+//   });
+// });
+
+
+
+
+$(document).ready(function(){
+  // Aplicar máscara nos campos de input
+  $('[data-input]').mask('000.000.000.000', {reverse: true});
+  
+  // Formatar valores existentes nos campos data-total
+  $('[data-total]').each((_, element) => {
+    const value = Number(element.textContent.replace(/\D/g, '') || 0);
+    $(element).text(value.toLocaleString('pt-BR'));
+  });
+
+  $('[data-table-price]').each((_, table) => {
+    $('input', table).on('input', (e) => {
+      const target = e.target;
+      const row = target.closest('tr');
+      const column = target.closest('td');
+      const rowIndex = row.rowIndex;
+      const columnIndex = column.cellIndex;
+      const inputsRow = $('input', row);
+      
+      // Soma da linha
+      const totalRow = inputsRow.map((i, input) => 
+        Number(input.value.replace(/\D/g, '') || 0)
+      ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+      
+      $(row).find('td[data-total]').text(totalRow.toLocaleString('pt-BR'));
+
+      // Soma da coluna
+      const inputsColumn = $(`td:nth-child(${columnIndex + 1}) input`, table);
+      const totalColumn = inputsColumn.map((i, input) =>
+        Number(input.value.replace(/\D/g, '') || 0)
+      ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+      $(`tr:last-child td:nth-child(${columnIndex + 1})`, table).text(totalColumn.toLocaleString('pt-BR'));
+
+      // Total do valor
+      const inputsTotalValue = $(`tr:last-child td:not(:last-child, :first-child)`, table);
+      const totalValue = inputsTotalValue.map((i, input) =>
+        Number(input.textContent.replace(/\D/g, '') || 0)
+      ).toArray().filter(item => item).reduce((prev, current) => prev + current, 0);
+
+      $('tr:last-child td:last-child', table).text(totalValue.toLocaleString('pt-BR'));
+    });
+  });
+});
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
